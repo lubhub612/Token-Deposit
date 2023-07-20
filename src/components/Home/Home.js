@@ -23,6 +23,7 @@ export default function Home() {
   const [withdrawValue, setWithdrawValue] = useState(0);
   const [handleWithdrawLoader, setHandleWithdrawLoader] = useState(false);
   const [userWithdrawBalance, setUserWithdrawBalance] = useState(0);
+  const [userWithdrawTokenBalance, setUserWithdrawTokenBalance] = useState(0);
   const [userValid, setUserValid] = useState(false);
   const [tokenPrice, setTokePrice] = useState(0);
   const [show, setShow] = useState(false);
@@ -60,6 +61,7 @@ export default function Home() {
   useEffect(() => {
     if (userAddress) {
       getUserWalletBalance();
+      getUserWalletTokenBalance();
     }
     return () => {};
   }, [userAddress]);
@@ -108,8 +110,11 @@ export default function Home() {
   
 
   const getUserWalletBalance = async () => {
+
+    
     try {
-      let url = `https://metabitclub.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/balance.php?address=${userAddress}`;
+      
+      let url = `https://federalcoin.social/dashboard/api/usd_balance.php?address=${userAddress}`;
       let bal = await axios.get(url).then((res, err) => {
         if (err) {
           setUserValid(false);
@@ -126,6 +131,35 @@ export default function Home() {
         setUserWithdrawBalance(0);
       } else {
         setUserWithdrawBalance(bal.data);
+      }
+    } catch (error) {
+      console.log("🚀 ~ getUserWalletBalance ~ error", error);
+    }
+  };
+
+   const getUserWalletTokenBalance = async () => {
+
+    
+    
+    try {
+      
+      let url = `https://federalcoin.social/dashboard/api/coin_balance.php?address=${userAddress}`;
+      let bal = await axios.get(url).then((res, err) => {
+        if (err) {
+          setUserValid(false);
+          console.log("err", err);
+        }
+        if (res) {
+          console.log("🚀 ~ bal ~ res", res);
+          setUserValid(true);
+          return res;
+        }
+      });
+      console.log("🚀 ~ bal ~ bal", bal);
+      if (bal.data == "Not Valid") {
+        setUserWithdrawTokenBalance(0);
+      } else {
+        setUserWithdrawTokenBalance(bal.data);
       }
     } catch (error) {
       console.log("🚀 ~ getUserWalletBalance ~ error", error);
@@ -279,15 +313,23 @@ if(tokenValue === 'DOT') {
         let formData = new FormData();
         formData.append("address", userAddress);
         formData.append("amount", depositAmount);
+        
         let depositApi = await axios.post(
-          `https://metabitclub.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/topup.php`,
-          formData
-        );
+          `https://federalcoin.social/dashboard/api/buy_coin.php`, formData).then((res, err) => {
+            if (res) {
+             console.log(res)
+              return res;
+  
+            }
+            if (err) {
+              console.log(err);
+            };
+          });
         console.log("🚀 ~ const_handleDeposit= ~ depositApi", depositApi);
         setButtonStatus("");
         setApproveBtn(true);
         toast.success("Deposit success!");
-        getUserWalletBalance();
+        getUserWalletTokenBalance();
       }
     } else {
       let _deposit = await MLMnew._depositCoin(Number(0), depostiAm.toString());
@@ -297,9 +339,16 @@ if(tokenValue === 'DOT') {
         formData.append("address", userAddress);
         formData.append("amount", depositAmount);
         let depositApi = await axios.post(
-          `https://metabitclub.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/topup.php`,
-          formData
-        );
+          `https://federalcoin.social/dashboard/api/usdt_deposit.php`, formData).then((res, err) => {
+            if (res) {
+              console.log(res)
+              return res;
+  
+            }
+            if (err) {
+              console.log(err);
+            };
+          });
         console.log("🚀 ~ const_handleDeposit= ~ depositApi", depositApi);
         setButtonStatus("");
         setApproveBtn(true);
@@ -432,8 +481,8 @@ if(tokenValue === 'DOT') {
                               fontSize: "20px",
                             }}
                           >
-                            (My Balance) - ({userWithdrawBalance}
-                            {" USDT"})
+                            (My Balance) - ( {tokenValue === 'USDT' ? userWithdrawBalance : userWithdrawTokenBalance }
+                              {tokenValue })
                           </p>
                         </div>
                       </div>
