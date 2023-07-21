@@ -167,37 +167,8 @@ export default function Home() {
   };
 
   
-/*
+
   const _handleApprove = async () => {
-    try {
-      // let _approveAmount = await MLM.estimateToken(depositAmount);
-
-      setButtonStatus("approve");
-      let depostiAm = bigInt(depositAmount * 10 ** 18);
-      console.log(
-        "🚀 ~ const_handleApprove= ~ depostiAm",
-        depostiAm.toString()
-      );
-
-      let add = MLM.address;
-      let _amount = await TOKEN.approve(add, depostiAm.toString());
-      let _wait = await _amount.wait();
-      if (_wait) {
-        setButtonStatus("");
-        setApproveBtn(false);
-
-        toast.success("Approve success!");
-      }
-    } catch (error) {
-      setButtonStatus("");
-      setApproveBtn(true);
-
-      console.log("🚀 ~ const_handleApprove=async ~ error", error);
-      toast.error("Something went wrong!");
-    }
-  };
-*/
-  const handleApproveToken = async () => {
     if (!userAddress) {
       return toast.error("Please connect wallet first!");
     }
@@ -252,49 +223,9 @@ export default function Home() {
   };
 
 
- /* const _handleDeposit = async () => {
-    if (!userAddress) {
-      return toast.error("Please connect wallet first!");
-    }
+ 
 
-    try {
-      setButtonStatus("deposit");
-      let depostiAm = bigInt(depositAmount * 10 ** 18);
-
-      let _deposit = await MLM._depositBusd(depostiAm.toString());
-      let _wait = await _deposit.wait();
-      if (_wait) {
-        let formData = new FormData();
-        formData.append("address", userAddress);
-        formData.append("amount", depositAmount);
-        let depositApi = await axios.post(
-          `https://metabitclub.com/dashboard/b59c67bf196a4758191e42f76670cebaAPI/topup.php`,
-          formData
-        );
-        console.log("🚀 ~ const_handleDeposit= ~ depositApi", depositApi);
-        setButtonStatus("");
-        setApproveBtn(true);
-        toast.success("Deposit success!");
-        getUserWalletBalance();
-      }
-    } catch (error) {
-      console.log("🚀 ~ const_handleDeposit= ~ error", error);
-      let _par = JSON.stringify(error);
-      let _parse = JSON.parse(_par);
-      if (_parse?.reason) {
-        toast.error(_parse?.reason);
-      } else {
-        toast.error("Something went wrong!");
-      }
-      console.log("🚀 ~ const_handleDeposit= ~ _parse", _parse);
-
-      setButtonStatus("");
-      console.log("🚀 ~ const_handleDeposit= ~ error", error);
-      // setApproveBtn(true);
-    }
-  };  */
-
-  const handleDepositToken = async () => {
+  const _handleDeposit = async () => {
     if (!userAddress) {
       return toast.error("Please connect wallet first!");
     }
@@ -369,7 +300,7 @@ if(tokenValue === 'DOT') {
 
       setButtonStatus("");
       console.log("🚀 ~ const_handleDeposit= ~ error", error);
-      // setApproveBtn(true);
+      
     }
   };
 
@@ -411,7 +342,7 @@ if(tokenValue === 'DOT') {
       <div className="row m-0 p-0 ">
         <div className="col-12  col-md-6  mt-1 mt-md-4 d-flex d-md-block justify-content-center">
           <a
-            href={`https://metabitclub.com/dashboard/home.php?address=${userAddress}`}
+             href={`https://federalcoin.social/dashboard/dashboard.php?address=${userAddress}`}
             className="dashboard "
           >
             Dashboard
@@ -421,7 +352,7 @@ if(tokenValue === 'DOT') {
           {userAddress ? (
             <button
               className="dashBoard wallet  btn btn-outline border-white text-white withdrawButton"
-              // onClick={handleWalletConnect}
+           
 
               disabled
               style={{
@@ -463,8 +394,8 @@ if(tokenValue === 'DOT') {
                       <div className="row ">
                         <div className="col-12 d-grid justify-content-center">
                           <img
-                            src="https://metabitclub.com/images/navLogo.png"
-                            alt="metabit"
+                          src='/assets/fdr_logo.png'
+                          alt="logo"
                           />
                           <h2 className="text-center text-center pb-2 ">
                             DEPOSIT
@@ -551,9 +482,8 @@ if(tokenValue === 'DOT') {
                               ) : (
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
-                                 // onClick={_handleApprove}
-                                  // onClick={handleShow}
-                                  onClick={handleApproveToken}
+                                onClick={_handleApprove}
+                                  
                                 >
                                   APPROVE
                                 </button>
@@ -576,9 +506,8 @@ if(tokenValue === 'DOT') {
                               ) : (
                                 <button
                                   className={`btn btn-outline border-white text-white  withdrawButton`}
-                                  //onClick={_handleDeposit}
-                                  // onClick={handleShow}handleDepositToken
-                                  onClick={handleDepositToken}
+                                  onClick={_handleDeposit}
+                                  
                                 >
                                   Deposit
                                 </button>
